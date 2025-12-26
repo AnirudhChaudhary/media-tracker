@@ -28,3 +28,9 @@ CLI:
 Notes:
 - The service files in `backend/src/services` are placeholders. Add real API calls and API keys in `backend/.env`.
 - The backend uses a simple file-based store at `backend/data/media.json` for now.
+
+
+## TODO
+- upgrade database from json to an actual db
+- add functionality for more user customizability when they watch a movie, tv show, anime, etc
+- watch later list

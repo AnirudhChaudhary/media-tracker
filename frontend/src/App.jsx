@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchView from './components/SearchView';
 import LibraryView from './components/LibraryView';
 import DetailView from './components/DetailView';
+import './index.css';
 import * as api from './api/client';
 
 function App() {

@@ -20,7 +20,6 @@ export async function getMedia(id) {
 }
 
 export async function addMedia(item) {
-//   console.log('WRITING TO:', DB_PATH);
   const response = await axios.post(`${API_BASE}/media`, item);
   return response.data;
 }
