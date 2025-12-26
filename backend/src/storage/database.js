@@ -35,12 +35,12 @@ export async function addMedia(item) {
   
   const newItem = {
     ...item,
-    status: 'plan_to_watch',
-    startDate: null,
-    completeDate: null,
-    userRating: null,
-    notes: '',
-    progress: null,
+    status: item.status ?? 'plan_to_watch',
+    startDate: item.startDate ?? null,
+    completeDate: item.completeDate ?? null,
+    userRating: item.userRating ?? null,
+    notes: item.notes ?? '',
+    progress: item.progress ?? null,
     addedDate: new Date().toISOString()
   };
   
