@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, CheckCircle, Clock, XCircle, Pause, Eye } from 'lucide-react';
+import { Star, CheckCircle, Clock, XCircle, Pause, Eye, Plus } from 'lucide-react';
 
 function LibraryView({ library = [], loading = false, onSelectItem = () => {}, onAddClick = () => {} }) {
   const [hoveredId, setHoveredId] = useState(null);
@@ -57,8 +57,18 @@ function LibraryView({ library = [], loading = false, onSelectItem = () => {}, o
   }
 
   return (
-    <div className="bg-gray-900 p-4 min-h-screen">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 justify-center">
+    <div className="bg-gray-900 p-4 min-h-screen relative">
+      {/* Top-right Add Button */}
+      <button
+        onClick={onAddClick}
+        className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-purple-500/30 z-10"
+        title="Add Media"
+      >
+        <Plus className="w-4 h-4 text-white" />
+        <span className="text-white text-sm">Add Media</span>
+      </button>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 justify-center mt-16">
         {library.map((item) => (
           <div
             key={item.id}

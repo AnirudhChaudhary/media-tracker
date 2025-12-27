@@ -32,6 +32,10 @@ router.get('/:mediaType', async (req, res) => {
       case 'manga':
         results = await anilist.searchManga(query);
         break;
+      case 'sports':
+        // For now, return empty array since sports are manually added
+        results = [];
+        break;
       default:
         return res.status(400).json({ error: 'Invalid media type' });
     }

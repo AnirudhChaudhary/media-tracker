@@ -32,3 +32,28 @@ export async function updateMedia(id, updates) {
 export async function deleteMedia(id) {
   await axios.delete(`${API_BASE}/media/${id}`);
 }
+
+// Sports Media API functions
+export async function getSportsLibrary() {
+  const response = await axios.get(`${API_BASE}/sports`);
+  return response.data;
+}
+
+export async function getSportsMedia(id) {
+  const response = await axios.get(`${API_BASE}/sports/${id}`);
+  return response.data;
+}
+
+export async function addSportsMedia(item) {
+  const response = await axios.post(`${API_BASE}/sports`, item);
+  return response.data;
+}
+
+export async function updateSportsMedia(id, updates) {
+  const response = await axios.patch(`${API_BASE}/sports/${id}`, updates);
+  return response.data;
+}
+
+export async function deleteSportsMedia(id) {
+  await axios.delete(`${API_BASE}/sports/${id}`);
+}
