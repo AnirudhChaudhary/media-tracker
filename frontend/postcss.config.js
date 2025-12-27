@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/postcss';
 
 export default {
-  plugins: {
-    '@tailwindcss/postcss': tailwindcss,
-  },
+    plugins: {
+        '@tailwindcss/postcss': tailwindcss,
+    },
 };
