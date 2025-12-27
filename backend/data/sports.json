@@ -1,0 +1,22 @@
+{
+  "sports": [
+    {
+      "sport": "Football",
+      "teams": "Cowboys vs Commanders",
+      "watchDuration": "full",
+      "watchedDate": "2025-12-25T00:00:00.000Z",
+      "notes": "no meaning game :(",
+      "id": "sports_1766865223435_e16k2f06x",
+      "addedDate": "2025-12-27T19:53:43.435Z"
+    },
+    {
+      "sport": "Basketball ",
+      "teams": "lakers vs warriors",
+      "watchDuration": "full",
+      "watchedDate": "2025-12-27T00:00:00.000Z",
+      "notes": "",
+      "id": "sports_1766865646575_zlv5etiq0",
+      "addedDate": "2025-12-27T20:00:46.575Z"
+    }
+  ]
+}

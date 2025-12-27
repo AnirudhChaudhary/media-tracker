@@ -2,18 +2,35 @@ import React, { useState, useEffect } from 'react';
 import SearchView from './components/SearchView';
 import LibraryView from './components/LibraryView';
 import DetailView from './components/DetailView';
+import SportsDetailView from './components/SportsDetailView';
+import SportsMediaView from './components/SportsMediaView';
+import SportsInputView from './components/SportsInputView';
 import './index.css';
 import * as api from './api/client';
 
 function App() {
   const [view, setView] = useState('library');
+  const [mediaType, setMediaType] = useState('regular'); // 'regular' or 'sports'
   const [library, setLibrary] = useState([]);
+  const [sportsLibrary, setSportsLibrary] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadLibrary();
+    loadSportsLibrary();
   }, []);
+
+  const loadSportsLibrary = async () => {
+    setLoading(true);
+    try {
+      const data = await api.getSportsLibrary();
+      setSportsLibrary(data);
+    } catch (error) {
+      console.error('Error loading sports library:', error);
+    }
+    setLoading(false);
+  };
 
   const loadLibrary = async () => {
     setLoading(true);
@@ -24,6 +41,40 @@ function App() {
       console.error('Error loading library:', error);
     }
     setLoading(false);
+  };
+
+  const handleAddSportsMedia = async (item) => {
+    try {
+      await api.addSportsMedia(item);
+      await loadSportsLibrary();
+      setView('sports-library');
+    } catch (error) {
+      console.error('Error adding sports media:', error);
+    }
+  };
+
+  const handleUpdateSportsMedia = async (id, updates) => {
+    try {
+      await api.updateSportsMedia(id, updates);
+      await loadSportsLibrary();
+      if (selectedItem?.id === id) {
+        const updated = await api.getSportsMedia(id);
+        setSelectedItem(updated);
+      }
+    } catch (error) {
+      console.error('Error updating sports media:', error);
+    }
+  };
+
+  const handleDeleteSportsMedia = async (id) => {
+    try {
+      await api.deleteSportsMedia(id);
+      await loadSportsLibrary();
+      setSelectedItem(null);
+      setView('sports-library');
+    } catch (error) {
+      console.error('Error deleting sports media:', error);
+    }
   };
 
   const handleAddToLibrary = async (item) => {
@@ -68,30 +119,26 @@ function App() {
           <h1 className="text-2xl font-bold mb-4">Media Tracker</h1>
           <div className="flex gap-2">
             <button
-              onClick={() => { setView('library'); setSelectedItem(null); }}
+              onClick={() => { setView('library'); setSelectedItem(null); setMediaType('regular'); }}
               className={`px-4 py-2 rounded ${
-                view === 'library' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
+                view === 'library' && mediaType === 'regular' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
               }`}
             >
-              Library
+              Media Library
             </button>
             <button
-              onClick={() => setView('search')}
+              onClick={() => { setView('sports-library'); setSelectedItem(null); setMediaType('sports'); }}
               className={`px-4 py-2 rounded ${
-                view === 'search' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
+                view === 'sports-library' ? 'bg-orange-600' : 'bg-gray-700 hover:bg-gray-600'
               }`}
             >
-              Add Media
+              Sports
             </button>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-4">
-        {view === 'search' && (
-          <SearchView onAddToLibrary={handleAddToLibrary} />
-        )}
-
         {view === 'library' && !selectedItem && (
           <LibraryView
             library={library}
@@ -101,13 +148,39 @@ function App() {
           />
         )}
 
-        {selectedItem && (
-          <DetailView
-            item={selectedItem}
-            onBack={() => setSelectedItem(null)}
-            onUpdate={handleUpdateItem}
-            onDelete={handleDeleteItem}
+        {view === 'search' && (
+          <SearchView onAddToLibrary={handleAddToLibrary} />
+        )}
+
+        {view === 'add-sports' && (
+          <SportsInputView onAddSportsMedia={handleAddSportsMedia} />
+        )}
+
+        {view === 'sports-library' && !selectedItem && (
+          <SportsMediaView
+            sportsLibrary={sportsLibrary}
+            loading={loading}
+            onSelectItem={setSelectedItem}
+            onAddClick={() => setView('add-sports')}
           />
+        )}
+
+        {selectedItem && (
+          selectedItem.id?.startsWith('sports_') ? (
+            <SportsDetailView
+              item={selectedItem}
+              onBack={() => setSelectedItem(null)}
+              onUpdate={handleUpdateSportsMedia}
+              onDelete={handleDeleteSportsMedia}
+            />
+          ) : (
+            <DetailView
+              item={selectedItem}
+              onBack={() => setSelectedItem(null)}
+              onUpdate={handleUpdateItem}
+              onDelete={handleDeleteItem}
+            />
+          )
         )}
       </div>
     </div>
