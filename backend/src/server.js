@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import mediaRoutes from './routes/media.js';
 import searchRoutes from './routes/search.js';
 import sportsRoutes from './routes/sports.js';
+import teamsRoutes from './routes/teams.js';
+import highlightsRoutes from './routes/highlights.js';
+import savedHighlightsRoutes from './routes/savedHighlights.js';
 
 dotenv.config();
 
@@ -17,6 +20,9 @@ app.use(express.json());
 app.use('/api/media', mediaRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/sports', sportsRoutes);
+app.use('/api/teams', teamsRoutes);
+app.use('/api/highlights', highlightsRoutes);
+app.use('/api/saved-highlights', savedHighlightsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Media Tracker API is running' });

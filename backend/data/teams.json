@@ -1,0 +1,22 @@
+{
+  "teams": [
+    {
+      "name": "Cowboys",
+      "sport": "Football",
+      "id": "team_1766878040813_kny43rsy4",
+      "addedDate": "2025-12-27T23:27:20.813Z"
+    },
+    {
+      "name": "Champions League",
+      "sport": "Soccer",
+      "id": "team_1766878739543_23xzpbv3k",
+      "addedDate": "2025-12-27T23:38:59.543Z"
+    },
+    {
+      "name": "Anaheim Ducks",
+      "sport": "Hockey",
+      "id": "team_1766880447405_qd51nepfk",
+      "addedDate": "2025-12-28T00:07:27.405Z"
+    }
+  ]
+}
