@@ -5,6 +5,7 @@ import DetailView from './components/DetailView';
 import SportsDetailView from './components/SportsDetailView';
 import SportsMediaView from './components/SportsMediaView';
 import SportsInputView from './components/SportsInputView';
+import HighlightsView from './components/HighlightsView';
 import './index.css';
 import * as api from './api/client';
 
@@ -134,11 +135,23 @@ function App() {
             >
               Sports
             </button>
+            <button
+              onClick={() => { setView('highlights'); setSelectedItem(null); }}
+              className={`px-4 py-2 rounded ${
+                view === 'highlights' ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'
+              }`}
+            >
+              Highlights
+            </button>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-4">
+        {view === 'highlights' && (
+          <HighlightsView />
+        )}
+
         {view === 'library' && !selectedItem && (
           <LibraryView
             library={library}

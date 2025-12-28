@@ -57,3 +57,68 @@ export async function updateSportsMedia(id, updates) {
 export async function deleteSportsMedia(id) {
   await axios.delete(`${API_BASE}/sports/${id}`);
 }
+
+// Teams API functions
+export async function getTeams() {
+  const response = await axios.get(`${API_BASE}/teams`);
+  return response.data;
+}
+
+export async function addTeam(team) {
+  const response = await axios.post(`${API_BASE}/teams`, team);
+  return response.data;
+}
+
+export async function deleteTeam(id) {
+  await axios.delete(`${API_BASE}/teams/${id}`);
+}
+
+// Highlights API functions
+export async function searchHighlights(team, date, sport) {
+  const params = { team };
+  if (date) params.date = date;
+  if (sport) params.sport = sport;
+  
+  const response = await axios.get(`${API_BASE}/highlights`, { params });
+  return response.data;
+}
+
+export async function discoverHighlights() {
+  const response = await axios.get(`${API_BASE}/highlights/discover`);
+  return response.data;
+}
+
+// Saved Highlights API functions
+export async function getSavedHighlights() {
+  const response = await axios.get(`${API_BASE}/saved-highlights`);
+  return response.data;
+}
+
+export async function saveHighlight(highlight) {
+  const response = await axios.post(`${API_BASE}/saved-highlights`, highlight);
+  return response.data;
+}
+
+export async function updateSavedHighlight(id, updates) {
+  const response = await axios.patch(`${API_BASE}/saved-highlights/${id}`, updates);
+  return response.data;
+}
+
+export async function deleteSavedHighlight(id) {
+  await axios.delete(`${API_BASE}/saved-highlights/${id}`);
+}
+
+// Trusted Channels API functions
+export async function getTrustedChannels() {
+  const response = await axios.get(`${API_BASE}/saved-highlights/trusted-channels`);
+  return response.data;
+}
+
+export async function addTrustedChannel(channelName) {
+  const response = await axios.post(`${API_BASE}/saved-highlights/trusted-channels`, { channelName });
+  return response.data;
+}
+
+export async function removeTrustedChannel(channelName) {
+  await axios.delete(`${API_BASE}/saved-highlights/trusted-channels/${encodeURIComponent(channelName)}`);
+}

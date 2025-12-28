@@ -17,6 +17,24 @@
       "notes": "",
       "id": "sports_1766865646575_zlv5etiq0",
       "addedDate": "2025-12-27T20:00:46.575Z"
+    },
+    {
+      "sport": "Football",
+      "teams": "Chargers vs Texans",
+      "watchDuration": "full",
+      "watchedDate": "2025-12-28T00:00:00.000Z",
+      "notes": "Get this mand herbert some help",
+      "id": "sports_1766906800357_fofirjizr",
+      "addedDate": "2025-12-28T07:26:40.357Z"
+    },
+    {
+      "sport": "Football",
+      "teams": "Packers vs Ravens",
+      "watchDuration": "half",
+      "watchedDate": "2025-12-27T00:00:00.000Z",
+      "notes": "",
+      "id": "sports_1766906827530_ybhwrjak9",
+      "addedDate": "2025-12-28T07:27:07.530Z"
     }
   ]
 }
