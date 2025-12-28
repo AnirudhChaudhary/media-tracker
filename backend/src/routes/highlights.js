@@ -22,9 +22,9 @@ router.get('/discover', async (req, res) => {
     }
 
     const searchHistory = await highlightsDb.getSearchHistory();
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    
+    const today = getTodayDate(date);
+    const yesterday = getYesterdayDate(date);
+
     const allHighlights = [];
     const rateLimitDelay = 100; // 100ms between requests
     
@@ -47,7 +47,7 @@ router.get('/discover', async (req, res) => {
                 part: 'snippet',
                 type: 'video',
                 maxResults: 3, // Fewer results for auto-discovery
-                order: 'relevance',
+                order: 'date',
                 publishedAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // Last 7 days
               }
             });
@@ -102,7 +102,7 @@ router.get('/discover', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const { team, date, sport } = req.query;
-    
+    console.log("Running query with " + team + " " + date + " " + sport + " ");
     if (!team) {
       return res.status(400).json({ error: 'Team parameter required' });
     }
@@ -119,26 +119,23 @@ router.get('/', async (req, res) => {
     let searchQuery = `${team} highlights`;
     if (sport) searchQuery += ` ${sport}`;
     if (date) {
-      const searchDate = new Date(date);
-      const dateStr = searchDate.toLocaleDateString('en-US', { 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric' 
-      });
+      const dateStr = getTodayDate(date);
       searchQuery += ` ${dateStr}`;
     }
 
     // YouTube Data API v3 search
+    console.log('Searching YouTube for:', searchQuery);
     const youtubeResponse = await axios.get('https://www.googleapis.com/youtube/v3/search', {
       params: {
         key: API_KEY,
         q: searchQuery,
         part: 'snippet',
         type: 'video',
-        maxResults: 12,
-        order: 'relevance',
+        maxResults: 5,
+        order: 'date',
         safeSearch: 'none',
-        videoDefinition: 'any'
+        videoDefinition: 'any',
+        publishedAfter: getYesterdayDateIso(date)
       }
     });
 
@@ -174,7 +171,7 @@ router.get('/', async (req, res) => {
       }));
 
     // Record search history to avoid duplicates
-    await highlightsDb.addSearchHistory(team, selectedDate, selectedSport);
+    await highlightsDb.addSearchHistory(team, date, sport);
 
     res.json({
       query: searchQuery,
@@ -214,4 +211,47 @@ function parseDuration(duration) {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+/**
+ * Returns a Date object of today's date
+ * @param {*} date 
+ */
+function getTodayDate(date) {
+  return createDateObject(date).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+function getYesterdayDate(date) {
+  const date_ = createDateObject(date);
+  date.setDate(date_.getDate() - 1);
+  return date_.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+function getTodayDateIso(date) {
+  return createDateObject(date).toISOString();
+}
+
+function getYesterdayDateIso(date) {
+  const date_ = createDateObject(date);
+  date_.setDate(date_.getDate() - 1);
+  return date_.toISOString();
+}
+
+function createDateObject(date) {
+  const [year, month, day] = date.split('-');
+  const dateStr = new Date(
+    Number(year),
+    Number(month) - 1, // java script months are 0 indexed
+    Number(day)
+  )
+
+  return dateStr
 }

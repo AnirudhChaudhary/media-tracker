@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Calendar, Play, ExternalLink, Heart, Plus, X, Eye, EyeOff, RefreshCw, BookmarkPlus, Check, Trash2 } from 'lucide-react';
+import {
+  Search, Calendar, Play, ExternalLink, Heart, Plus, X, Eye, EyeOff,
+  RefreshCw, BookmarkPlus, Check, Trash2
+} from 'lucide-react';
 import * as api from '../api/client';
 
 function HighlightsView() {
@@ -19,6 +22,10 @@ function HighlightsView() {
   const [showTrustedOnly, setShowTrustedOnly] = useState(false);
   const [showChannelManager, setShowChannelManager] = useState(false);
   const [newChannel, setNewChannel] = useState('');
+  
+  // Optimistic save/undo state
+  const [highlightStatus, setHighlightStatus] = useState({});
+  // { [highlightId]: { saved: bool, undoTimer: timeoutId } }
 
   useEffect(() => {
     loadTeams();
@@ -37,35 +44,28 @@ function HighlightsView() {
 
   const loadTrustedChannels = async () => {
     try {
-      console.log('Loading trusted channels...');
       const data = await api.getTrustedChannels();
-      console.log('Trusted channels loaded:', data);
       setTrustedChannels(data);
     } catch (error) {
       console.error('Error loading trusted channels:', error);
-      console.error('Error details:', error.response?.data);
     }
   };
 
   const handleAddTrustedChannel = async (channelName) => {
     try {
-      console.log('Adding trusted channel:', channelName);
       await api.addTrustedChannel(channelName);
       await loadTrustedChannels();
     } catch (error) {
       console.error('Error adding trusted channel:', error);
-      console.error('Error details:', error.response?.data);
     }
   };
 
   const handleRemoveTrustedChannel = async (channelName) => {
     try {
-      console.log('Removing trusted channel:', channelName);
       await api.removeTrustedChannel(channelName);
       await loadTrustedChannels();
     } catch (error) {
       console.error('Error removing trusted channel:', error);
-      console.error('Error details:', error.response?.data);
     }
   };
 
@@ -74,7 +74,6 @@ function HighlightsView() {
     try {
       const data = await api.discoverHighlights();
       if (data.results && data.results.length > 0) {
-        // Auto-save discovered highlights
         for (const highlight of data.results) {
           await api.saveHighlight(highlight);
         }
@@ -93,14 +92,41 @@ function HighlightsView() {
     setDiscovering(false);
   };
 
-  const handleSaveHighlight = async (highlight) => {
-    try {
-      await api.saveHighlight(highlight);
-      await loadSavedHighlights();
-    } catch (error) {
-      console.error('Error saving highlight:', error);
-    }
+  // --- Optimistic save + undo ---
+  const handleSaveHighlightOptimistic = (highlight) => {
+    setHighlightStatus(prev => ({
+      ...prev,
+      [highlight.id]: { saved: true }
+    }));
+
+    const undoTimer = setTimeout(async () => {
+      try {
+        await api.saveHighlight(highlight);
+        await loadSavedHighlights();
+      } catch (err) {
+        console.error('Failed to save highlight:', err);
+        setHighlightStatus(prev => ({
+          ...prev,
+          [highlight.id]: { saved: false }
+        }));
+      }
+    }, 5000);
+
+    setHighlightStatus(prev => ({
+      ...prev,
+      [highlight.id]: { saved: true, undoTimer }
+    }));
   };
+
+  const handleUndoSave = (highlight) => {
+    const status = highlightStatus[highlight.id];
+    if (status?.undoTimer) clearTimeout(status.undoTimer);
+    setHighlightStatus(prev => ({
+      ...prev,
+      [highlight.id]: { saved: false }
+    }));
+  };
+  // -----------------------------
 
   const handleToggleWatched = async (id, watched) => {
     try {
@@ -132,7 +158,7 @@ function HighlightsView() {
   const handleAddTeam = async (e) => {
     e.preventDefault();
     if (!newTeam.name || !newTeam.sport) return;
-    
+
     try {
       await api.addTeam(newTeam);
       await loadTeams();
@@ -154,7 +180,7 @@ function HighlightsView() {
 
   const searchHighlights = async () => {
     if (!selectedTeam) return;
-    
+
     setLoading(true);
     try {
       const data = await api.searchHighlights(selectedTeam, selectedDate, selectedSport);
@@ -419,24 +445,32 @@ function HighlightsView() {
                         Watch on YouTube
                         <ExternalLink className="w-4 h-4" />
                       </a>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleSaveHighlight(highlight)}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium transition-colors"
-                        >
-                          <BookmarkPlus className="w-4 h-4" />
-                          Save
-                        </button>
-                        {!isTrusted && (
-                          <button
-                            onClick={() => handleAddTrustedChannel(highlight.channelTitle)}
-                            className="px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-white text-sm transition-colors"
-                            title="Trust this channel"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </button>
+
+                      {/* Save / Undo Button */}
+                      <button
+                        onClick={() =>
+                          highlightStatus[highlight.id]?.saved
+                            ? handleUndoSave(highlight)
+                            : handleSaveHighlightOptimistic(highlight)
+                        }
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all duration-300 ${
+                          highlightStatus[highlight.id]?.saved
+                            ? 'bg-green-600 hover:bg-green-500 text-white'
+                            : 'bg-blue-600 hover:bg-blue-500 text-white'
+                        }`}
+                      >
+                        {highlightStatus[highlight.id]?.saved ? (
+                          <>
+                            <Check className="w-4 h-4" />
+                            Undo Save
+                          </>
+                        ) : (
+                          <>
+                            <BookmarkPlus className="w-4 h-4" />
+                            Save
+                          </>
                         )}
-                      </div>
+                      </button>
                     </div>
                   </div>
                 );
