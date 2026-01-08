@@ -1,0 +1,44 @@
+{
+  "research_areas": [
+    {
+      "id": "llm",
+      "name": "Large Language Models",
+      "description": "Transformer architectures, pretraining, and language model capabilities",
+      "categories": [
+        "cs.CL",
+        "cs.LG",
+        "cs.AI"
+      ],
+      "keywords": [
+        "transformer",
+        "LLM",
+        "language model",
+        "pretraining",
+        "GPT",
+        "BERT",
+        "attention",
+        "fine-tuning"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "ml_systems",
+      "name": "Machine Learning Systems",
+      "description": "Distributed training, model serving, and ML infrastructure",
+      "categories": [
+        "cs.LG",
+        "cs.DC",
+        "cs.SY"
+      ],
+      "keywords": [
+        "distributed training",
+        "model serving",
+        "MLOps",
+        "federated learning",
+        "edge computing",
+        "inference optimization"
+      ],
+      "enabled": false
+    }
+  ]
+}

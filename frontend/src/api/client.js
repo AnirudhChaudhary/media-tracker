@@ -122,3 +122,107 @@ export async function addTrustedChannel(channelName) {
 export async function removeTrustedChannel(channelName) {
   await axios.delete(`${API_BASE}/saved-highlights/trusted-channels/${encodeURIComponent(channelName)}`);
 }
+
+// Todos API functions
+export async function getTodos() {
+  const response = await axios.get(`${API_BASE}/todos`);
+  return response.data;
+}
+
+export async function getTodo(id) {
+  const response = await axios.get(`${API_BASE}/todos/${id}`);
+  return response.data;
+}
+
+export async function addTodo(todo) {
+  const response = await axios.post(`${API_BASE}/todos`, todo);
+  return response.data;
+}
+
+export async function updateTodo(id, updates) {
+  const response = await axios.patch(`${API_BASE}/todos/${id}`, updates);
+  return response.data;
+}
+
+export async function deleteTodo(id) {
+  await axios.delete(`${API_BASE}/todos/${id}`);
+}
+// Habits API functions
+export async function getHabits() {
+  const response = await axios.get(`${API_BASE}/habits`);
+  return response.data;
+}
+
+export async function getHabit(id) {
+  const response = await axios.get(`${API_BASE}/habits/${id}`);
+  return response.data;
+}
+
+export async function addHabit(habit) {
+  const response = await axios.post(`${API_BASE}/habits`, habit);
+  return response.data;
+}
+
+export async function updateHabit(id, updates) {
+  const response = await axios.patch(`${API_BASE}/habits/${id}`, updates);
+  return response.data;
+}
+
+export async function completeHabit(id, date) {
+  const response = await axios.post(`${API_BASE}/habits/${id}/complete`, { date });
+  return response.data;
+}
+
+export async function deleteHabit(id) {
+  await axios.delete(`${API_BASE}/habits/${id}`);
+}
+export async function uncompleteHabit(id, date) {
+  const response = await axios.post(`${API_BASE}/habits/${id}/uncomplete`, { date });
+  return response.data;
+}
+// Papers API functions
+export async function getPapers() {
+  const response = await axios.get(`${API_BASE}/papers`);
+  return response.data;
+}
+
+export async function getResearchConfig() {
+  const response = await axios.get(`${API_BASE}/papers/config`);
+  return response.data;
+}
+
+export async function fetchNewPapers() {
+  const response = await axios.post(`${API_BASE}/papers/fetch`);
+  return response.data;
+}
+
+export async function updatePaper(id, updates) {
+  const response = await axios.patch(`${API_BASE}/papers/${id}`, updates);
+  return response.data;
+}
+
+export async function deletePaper(id) {
+  await axios.delete(`${API_BASE}/papers/${id}`);
+}
+export async function updateResearchConfig(updates) {
+  const response = await axios.patch(`${API_BASE}/papers/config`, updates);
+  return response.data;
+}
+
+export async function toggleResearchArea(areaId, enabled) {
+  const response = await axios.post(`${API_BASE}/papers/areas/${areaId}/toggle`, { enabled });
+  return response.data;
+}
+export async function addResearchArea(areaData) {
+  const response = await axios.post(`${API_BASE}/papers/areas`, areaData);
+  return response.data;
+}
+
+export async function removeResearchArea(areaId) {
+  const response = await axios.delete(`${API_BASE}/papers/areas/${areaId}`);
+  return response.data;
+}
+export async function getArxivCategories() {
+  const response = await axios.get(`${API_BASE}/papers/categories`);
+  return response.data;
+}

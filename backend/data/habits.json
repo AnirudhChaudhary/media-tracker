@@ -1,0 +1,21 @@
+{
+  "habits": [
+    {
+      "id": "habit_1767862408574",
+      "name": "hims hair therapy",
+      "description": "",
+      "category": "health",
+      "frequency": "daily",
+      "streak": 1,
+      "longestStreak": 1,
+      "completions": [
+        {
+          "date": "2026-01-08",
+          "completed": true,
+          "completedAt": "2026-01-08T08:59:58.670Z"
+        }
+      ],
+      "createdAt": "2026-01-08T08:53:28.574Z"
+    }
+  ]
+}

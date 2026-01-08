@@ -8,6 +8,8 @@ import teamsRoutes from './routes/teams.js';
 import highlightsRoutes from './routes/highlights.js';
 import savedHighlightsRoutes from './routes/savedHighlights.js';
 import todosRoutes from './routes/todos.js';
+import habitsRoutes from './routes/habits.js';
+import papersRoutes from './routes/papers.js';
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ app.use('/api/teams', teamsRoutes);
 app.use('/api/highlights', highlightsRoutes);
 app.use('/api/saved-highlights', savedHighlightsRoutes);
 app.use('/api/todos', todosRoutes);
+app.use('/api/habits', habitsRoutes);
+app.use('/api/papers', papersRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Media Tracker API is running' });
