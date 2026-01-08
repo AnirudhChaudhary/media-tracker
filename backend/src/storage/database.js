@@ -71,3 +71,75 @@ export async function deleteMedia(id) {
   await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2));
   return true;
 }
+
+const TODOS_PATH = path.join(__dirname, '../../data/todos.json');
+
+async function initTodosDB() {
+  try {
+    await fs.access(TODOS_PATH);
+  } catch {
+    await fs.mkdir(path.dirname(TODOS_PATH), { recursive: true });
+    await fs.writeFile(TODOS_PATH, JSON.stringify({ todos: [] }, null, 2));
+  }
+}
+
+export async function getAllTodos() {
+  await initTodosDB();
+  const data = await fs.readFile(TODOS_PATH, 'utf-8');
+  return JSON.parse(data).todos;
+}
+
+export async function getTodoById(id) {
+  const todos = await getAllTodos();
+  return todos.find(item => item.id === id);
+}
+
+export async function addTodo(item) {
+  await initTodosDB();
+  const data = await fs.readFile(TODOS_PATH, 'utf-8');
+  const db = JSON.parse(data);
+  
+  const newTodo = {
+    id: `todo_${Date.now()}`,
+    title: item.title,
+    description: item.description || '',
+    status: item.status || 'todo',
+    priority: item.priority || 'medium',
+    category: item.category || 'personal',
+    createdAt: new Date().toISOString(),
+    dueDate: item.dueDate || null,
+    completedAt: null
+  };
+  
+  db.todos.push(newTodo);
+  await fs.writeFile(TODOS_PATH, JSON.stringify(db, null, 2));
+  return newTodo;
+}
+
+export async function updateTodo(id, updates) {
+  await initTodosDB();
+  const data = await fs.readFile(TODOS_PATH, 'utf-8');
+  const db = JSON.parse(data);
+  
+  const index = db.todos.findIndex(item => item.id === id);
+  if (index === -1) return null;
+  
+  const updatedTodo = { ...db.todos[index], ...updates };
+  if (updates.status === 'done' && !updatedTodo.completedAt) {
+    updatedTodo.completedAt = new Date().toISOString();
+  }
+  
+  db.todos[index] = updatedTodo;
+  await fs.writeFile(TODOS_PATH, JSON.stringify(db, null, 2));
+  return updatedTodo;
+}
+
+export async function deleteTodo(id) {
+  await initTodosDB();
+  const data = await fs.readFile(TODOS_PATH, 'utf-8');
+  const db = JSON.parse(data);
+  
+  db.todos = db.todos.filter(item => item.id !== id);
+  await fs.writeFile(TODOS_PATH, JSON.stringify(db, null, 2));
+  return true;
+}

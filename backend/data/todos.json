@@ -1,0 +1,15 @@
+{
+  "todos": [
+    {
+      "id": "todo_1767861278701",
+      "title": "Get Costco Glasses",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "category": "personal",
+      "createdAt": "2026-01-08T08:34:38.701Z",
+      "dueDate": null,
+      "completedAt": null
+    }
+  ]
+}
