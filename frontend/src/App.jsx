@@ -10,6 +10,7 @@ import TodosView from './components/TodosView';
 import HomeView from './components/HomeView';
 import HabitsView from './components/HabitsView';
 import ResearchView from './components/ResearchView';
+import RelationshipsView from './components/RelationshipsView';
 import './index.css';
 import * as api from './api/client';
 
@@ -146,12 +147,13 @@ function App() {
             </div>
             
             {/* Premium Tab Navigation */}
-            <nav className="flex space-x-1 bg-gray-800/50 p-1 rounded-xl backdrop-blur-sm">
+            <nav className="flex flex-wrap justify-center space-x-1 bg-gray-800/50 p-1 rounded-xl backdrop-blur-sm overflow-x-auto">
             {[
               { id: 'home', label: 'Home', icon: '🏠', gradient: 'from-indigo-500 to-purple-600' },
               { id: 'todos', label: 'Todos', icon: '✅', gradient: 'from-purple-500 to-pink-600' },
               { id: 'habits', label: 'Habits', icon: '🎯', gradient: 'from-emerald-500 to-teal-600' },
               { id: 'research', label: 'Research', icon: '📝', gradient: 'from-cyan-500 to-blue-600' },
+              { id: 'relationships', label: 'People', icon: '👥', gradient: 'from-pink-500 to-rose-600' },
               { id: 'library', label: 'Media', icon: '📚', gradient: 'from-blue-500 to-cyan-600' },
               { id: 'sports-library', label: 'Sports', icon: '🏈', gradient: 'from-orange-500 to-red-600' },
               { id: 'highlights', label: 'Highlights', icon: '✨', gradient: 'from-green-500 to-emerald-600' }
@@ -166,14 +168,14 @@ function App() {
                     if (tab.id === 'library') setMediaType('regular');
                     if (tab.id === 'sports-library') setMediaType('sports');
                   }}
-                  className={`relative flex items-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-300 group ${
+                  className={`relative flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2 px-2 sm:px-4 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300 group min-w-0 ${
                     isActive
                       ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg transform scale-105`
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   }`}
                 >
-                  <span className="text-lg">{tab.icon}</span>
-                  <span className="font-semibold">{tab.label}</span>
+                  <span className="text-lg sm:text-lg">{tab.icon}</span>
+                  <span className="font-semibold text-xs sm:text-sm truncate">{tab.label}</span>
                   {isActive && (
                     <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-lg opacity-50"></div>
                   )}
@@ -185,7 +187,7 @@ function App() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {view === 'home' && (
           <HomeView onNavigate={setView} />
         )}
@@ -204,6 +206,10 @@ function App() {
 
         {view === 'research' && (
           <ResearchView />
+        )}
+
+        {view === 'relationships' && (
+          <RelationshipsView />
         )}
 
         {view === 'library' && !selectedItem && (

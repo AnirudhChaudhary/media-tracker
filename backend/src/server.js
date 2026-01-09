@@ -10,6 +10,7 @@ import savedHighlightsRoutes from './routes/savedHighlights.js';
 import todosRoutes from './routes/todos.js';
 import habitsRoutes from './routes/habits.js';
 import papersRoutes from './routes/papers.js';
+import relationshipsRoutes from './routes/relationships.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/api/saved-highlights', savedHighlightsRoutes);
 app.use('/api/todos', todosRoutes);
 app.use('/api/habits', habitsRoutes);
 app.use('/api/papers', papersRoutes);
+app.use('/api/relationships', relationshipsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Media Tracker API is running' });
